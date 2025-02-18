@@ -1,4 +1,13 @@
 {
+  "name": "gm-thumbgen",
+  "version": "1.0.0",
+  "description": "Webp-format image thumbnailer server. Requires graphicsmagick to be installed locally.",
+  "author": {
+    "name": "deneb",
+    "email": "deneb@screee.ee",
+    "url": "https://leggi.es/"
+  },
+  "bin": "build/js/main.js",
   "dependencies": {
     "express": "^5.0.1",
     "gm": "^1.25.0",
@@ -16,10 +25,12 @@
     "typescript": "^5.7.3"
   },
   "scripts": {
+    "prepare": "npm run build",
+    "shebang": "sed -i '1i#!/usr/bin/env node'",
     "dev": "nodemon -e ts -x 'ts-node src/main' --",
-    "build": "tsc --outDir build/js",
+    "build": "tsc --outDir build/js && npm run shebang build/js/main.js",
     "preview": "node build/js/main.js || echo 'Run `npm run build` first!'",
-    "bundle": "mkdir -p build && esbuild --minify --bundle --platform=node src/main.ts > build/bundle.js",
+    "bundle": "mkdir -p build && esbuild --minify --bundle --platform=node src/main.ts > build/bundle.js && npm run shebang build/bundle.js && chmod +x build/bundle.js",
     "clean": "rm -rf build/*",
     "format": "prettier --write src/"
   }
