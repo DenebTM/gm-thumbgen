@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "express": "^5.0.1",
+    "gm": "^1.25.0",
+    "morgan": "^1.10.0",
+    "sockaddr": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/gm": "^1.25.4",
+    "@types/morgan": "^1.9.9",
+    "esbuild": "^0.25.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "scripts": {
+    "dev": "nodemon -e ts -x 'ts-node src/main' --",
+    "build": "tsc --outDir build/js",
+    "preview": "node build/js/main.js || echo 'Run `npm run build` first!'",
+    "bundle": "mkdir -p build && esbuild --minify --bundle --platform=node src/main.ts > build/bundle.js",
+    "clean": "rm -rf build/*",
+    "format": "prettier --write src/"
+  }
+}

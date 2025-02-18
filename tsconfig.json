@@ -1,0 +1,12 @@
+{
+  "include": ["src/*.ts", "package.json", "src/sockaddr.d.ts"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "strictNullChecks": true,
+    "paths": {
+      "*": ["./src/", "./node_modules/"]
+    }
+  }
+}
