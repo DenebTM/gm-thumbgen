@@ -22,53 +22,56 @@ if (args.help) {
 const app = express()
 app.use(morgan('combined'))
 
-app.get('/{*path}', async (req: Request<{ path?: string[] }>, res) => {
-  const urlPath =
-    typeof req.params.path != 'undefined' && path.join(...req.params.path)
+app.get(
+  `${args.urlPrefix}/{*path}`,
+  async (req: Request<{ path?: string[] }>, res) => {
+    const urlPath =
+      typeof req.params.path != 'undefined' && path.join(...req.params.path)
 
-  try {
-    if (!urlPath) {
-      throw ['Missing file name', 400]
-    }
-
-    const targetPath = path.join(args.outputBase, urlPath)
-
-    // serve existing file if it happens to exist in `outputBase`
-    if (exists(targetPath)) {
-      res.sendFile(path.resolve(targetPath))
-      return
-    }
-
-    const sourceFilename = getSourceFilename(urlPath)
-
-    const thumbFilename = getThumbFilename(urlPath)
-    if (!exists(path.dirname(thumbFilename))) {
-      await fs.mkdir(path.dirname(thumbFilename), { recursive: true })
-    }
-
-    // generate new thumbnail if one does not already exist
-    if (!exists(thumbFilename)) {
-      try {
-        await createThumb(sourceFilename, thumbFilename)
-      } catch (err) {
-        throw [String(err), 500]
+    try {
+      if (!urlPath) {
+        throw ['Missing file name', 400]
       }
-    }
 
-    // redirect to new or existing thumbnail
-    res.redirect(308, getThumbUrl(thumbFilename))
-  } catch (err) {
-    let [message, status] = ['', 500]
-    if (err instanceof Array) {
-      const [] = ([message, status] = err)
-    } else {
-      message = err
-    }
+      const targetPath = path.join(args.outputBase, urlPath)
 
-    res.status(status)
-    res.send('Error: ' + message)
+      // serve existing file if it happens to exist in `outputBase`
+      if (exists(targetPath)) {
+        res.sendFile(path.resolve(targetPath))
+        return
+      }
+
+      const sourceFilename = getSourceFilename(urlPath)
+
+      const thumbFilename = getThumbFilename(urlPath)
+      if (!exists(path.dirname(thumbFilename))) {
+        await fs.mkdir(path.dirname(thumbFilename), { recursive: true })
+      }
+
+      // generate new thumbnail if one does not already exist
+      if (!exists(thumbFilename)) {
+        try {
+          await createThumb(sourceFilename, thumbFilename)
+        } catch (err) {
+          throw [String(err), 500]
+        }
+      }
+
+      // redirect to new or existing thumbnail
+      res.redirect(308, getThumbUrl(thumbFilename))
+    } catch (err) {
+      let [message, status] = ['', 500]
+      if (err instanceof Array) {
+        const [] = ([message, status] = err)
+      } else {
+        message = err
+      }
+
+      res.status(status)
+      res.send('Error: ' + message)
+    }
   }
-})
+)
 
 const addr = sockaddr(args.bind, { defaultPort: 3000 })
 const addrString =

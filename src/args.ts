@@ -13,6 +13,11 @@ export const { values: args } = parseArgs({
       default: './thumbs',
       short: 'o',
     },
+    urlPrefix: {
+      type: 'string',
+      default: '/thumbs',
+      short: 'p',
+    },
     thumbSize: {
       type: 'string',
       default: '512',

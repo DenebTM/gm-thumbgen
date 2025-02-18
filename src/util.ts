@@ -30,7 +30,9 @@ export function getThumbFilename(urlPath: string): string {
 }
 
 export function getThumbUrl(thumbFilename: string): string {
-  return path.sep + path.relative(args.outputBase, thumbFilename)
+  return (
+    args.urlPrefix + path.sep + path.relative(args.outputBase, thumbFilename)
+  )
 }
 
 export async function createThumb(
