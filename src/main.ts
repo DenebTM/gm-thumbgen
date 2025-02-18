@@ -31,6 +31,14 @@ app.get('/{*path}', async (req: Request<{ path?: string[] }>, res) => {
       throw ['Missing file name', 400]
     }
 
+    const targetPath = path.join(args.outputBase, urlPath)
+
+    // serve existing file if it happens to exist in `outputBase`
+    if (exists(targetPath)) {
+      res.sendFile(path.resolve(targetPath))
+      return
+    }
+
     const sourceFilename = getSourceFilename(urlPath)
 
     const thumbFilename = getThumbFilename(urlPath)
