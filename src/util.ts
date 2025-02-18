@@ -11,7 +11,7 @@ export function getSourceFilename(urlPath: string): string {
 
   const sourceFilename = path.join(inputBase, urlPath)
   if (!exists(sourceFilename)) {
-    throw ['Source file does not exist', 400]
+    throw ['Source file does not exist', 404]
   }
   if (!validExtensions.includes(path.extname(urlPath).toLowerCase())) {
     throw ['Source file is not an image', 400]
